@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblically Accurate Angel</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    const biblically_accurate_angel_canvas = document.getElementById('canvas');
+    const biblically_accurate_angel_ctx = biblically_accurate_angel_canvas.getContext('2d');
+    biblically_accurate_angel_canvas.width = window.innerWidth;
+    biblically_accurate_angel_canvas.height = window.innerHeight;
+    function generate_random_int(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function generate_random_color() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    function draw_lines() {
+        const nodes = [];
+        const max_nodes = 100;
+        const max_lines_per_node = 5;
+        function create_node(x, y) {
+            return { x, y };
+        }
+        function draw_line(x1, y1, x2, y2, color) {
+            biblically_accurate_angel_ctx.beginPath();
+            biblically_accurate_angel_ctx.moveTo(x1, y1);
+            biblically_accurate_angel_ctx.lineTo(x2, y2);
+            biblically_accurate_angel_ctx.strokeStyle = color;
+            biblically_accurate_angel_ctx.stroke();
+            biblically_accurate_angel_ctx.closePath();
+        }
+        function get_random_node() {
+            return nodes[Math.floor(Math.random() * nodes.length)];
+        }
+        function update_nodes(x, y) {
+            if (nodes.length < max_nodes) {
+                nodes.push(create_node(x, y));
+            } else {
+                nodes.shift();
+                nodes.push(create_node(x, y));
+            }
+        }
+        function animate() {
+            biblically_accurate_angel_ctx.clearRect(0, 0, biblically_accurate_angel_canvas.width, biblically_accurate_angel_canvas.height);
+            nodes.forEach(node => {
+                for (let i = 0; i < max_lines_per_node; i++) {
+                    const random_node = get_random_node();
+                    const line_color = generate_random_color();
+                    draw_line(node.x, node.y, random_node.x, random_node.y, line_color);
+                }
+            });
+            update_nodes(generate_random_int(0, biblically_accurate_angel_canvas.width), generate_random_int(0, biblically_accurate_angel_canvas.height));
+            requestAnimationFrame(animate);
+        }
+        for (let i = 0; i < max_nodes; i++) {
+            nodes.push(create_node(generate_random_int(0, biblically_accurate_angel_canvas.width), generate_random_int(0, biblically_accurate_angel_canvas.height)));
+        }
+        animate();
+    }
+    draw_lines();
+</script>
+</body>
+</html>
