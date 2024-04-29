@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+  <title>Why are you here ?</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="colorCanvas"></canvas>
+  <script>
+    const chaotic_canvas = document.getElementById('colorCanvas');
+    const chaotic_ctx = chaotic_canvas.getContext('2d');
+    chaotic_canvas.width = window.innerWidth;
+    chaotic_canvas.height = window.innerHeight;
+    const square_size = 20;
+    const num_rows = Math.floor(chaotic_canvas.width / square_size);
+    const num_cols = Math.floor(chaotic_canvas.height / square_size);
+    function drawRandomColorSquares() {
+      for (let i = 0; i < num_rows; i++) {
+        for (let j = 0; j < num_cols; j++) {
+          const random_color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+          chaotic_ctx.fillStyle = random_color;
+
+          if (Math.random() < 0.5) {
+            const shape = Math.random();
+            if (shape < 0.25) {
+              chaotic_ctx.fillRect(i * square_size, j * square_size, square_size, square_size);
+            } else if (shape < 0.5) {
+              chaotic_ctx.beginPath();
+              chaotic_ctx.arc(i * square_size + square_size / 2, j * square_size + square_size / 2, square_size / 2, 0, Math.PI * 2);
+              chaotic_ctx.fill();
+            } else if (shape < 0.75) {
+              chaotic_ctx.beginPath();
+              chaotic_ctx.moveTo(i * square_size + square_size / 2, j * square_size);
+              chaotic_ctx.lineTo(i * square_size + square_size, j * square_size + square_size);
+              chaotic_ctx.lineTo(i * square_size, j * square_size + square_size);
+              chaotic_ctx.closePath();
+              chaotic_ctx.fill();
+            } else {
+              chaotic_ctx.beginPath();
+              chaotic_ctx.moveTo(i * square_size, j * square_size);
+              chaotic_ctx.lineTo(i * square_size + square_size, j * square_size);
+              chaotic_ctx.lineTo(i * square_size + square_size / 2, j * square_size + square_size);
+              chaotic_ctx.closePath();
+              chaotic_ctx.fill();
+            }
+          } else {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const random_letter = letters.charAt(Math.floor(Math.random() * letters.length));
+            chaotic_ctx.font = 'bold ' + square_size + 'px Arial';
+            chaotic_ctx.textAlign = 'center';
+            chaotic_ctx.fillText(random_letter, i * square_size + square_size / 2, j * square_size + square_size / 1.5);
+          }
+        }
+      }
+    }
+    setInterval(drawRandomColorSquares, 50);
+  </script>
+</body>
+</html>
